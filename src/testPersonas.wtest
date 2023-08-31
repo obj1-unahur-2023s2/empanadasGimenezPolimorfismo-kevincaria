@@ -1,0 +1,74 @@
+import personas.*
+
+describe "Tests de Galvan"{
+
+    method gastar120MilYCobrarSueldo(){
+        galvan.gastar(40000)
+        galvan.gastar(80000)
+        galvan.cobrarSueldo()
+    }
+
+    method gastar370MilYCobrarSueldo(){
+        self.gastar120MilYCobrarSueldo()
+        galvan.gastar(250000)
+    }
+
+    method gastar370MilYCobrar2Sueldos(){
+        self.gastar370MilYCobrarSueldo()
+        galvan.cobrarSueldo()
+    }
+
+    test "Galvan arranca con deuda 0"{
+        assert.equals(0, galvan.totalDeuda())
+    }
+
+    test "Galvan arranca con dinero 0"{
+        assert.equals(0, galvan.totalDinero())
+    }
+
+    test "Sueldo de Galvan es de 150000"{
+        assert.equals(150000, galvan.sueldo())
+    }
+
+    test "Galván gasta 40000, totalDeuda() debe ser 40000, totalDinero() debe ser 0"{
+        galvan.gastar(40000)
+        assert.equals(40000, galvan.totalDeuda())
+    }
+
+    test "Galván gasta otros 80000, totalDeuda() pasa a 120000, totaldinero sigue en 0"{
+        galvan.gastar(40000)
+        galvan.gastar(80000)
+        assert.equals(120000, galvan.totalDeuda())
+    }
+
+    test "Galván cobra, con los 150000 que recibe paga toda su deuda y le sobran 30000 pesos. Por lo tanto, totalDeuda() debe ser 0"{
+        self.gastar120MilYCobrarSueldo()
+        assert.equals(0, galvan.totalDeuda())
+    }
+
+    test "Galván cobra, con los 150000 que recibe paga toda su deuda y le sobran 30000 pesos. Por lo tanto, totalDinero() debe ser 30000"{
+        self.gastar120MilYCobrarSueldo()
+        assert.equals(30000, galvan.totalDinero())
+    }
+
+    test "Galván gasta 250000, cubre 30000 con el dinero que tiene, el resto es deuda. totalDeuda() queda en 220000"{
+        self.gastar370MilYCobrarSueldo()
+        assert.equals(220000, galvan.totalDeuda())
+    }
+
+    test "Galván gasta 250000, cubre 30000 con el dinero que tiene, el resto es deuda. totalDinero() en 0"{
+        self.gastar370MilYCobrarSueldo()
+        assert.equals(0, galvan.totalDinero())
+    }
+
+    test "Galván cobra, tiene que dedicar los 150000 a pagar deudas, y no le alcanza. Ahora, totalDeuda() pasa a 70000"{
+        self.gastar370MilYCobrar2Sueldos()
+        assert.equals(70000, galvan.totalDeuda())
+    }
+
+    test "Galván cobra, tiene que dedicar los 150000 a pagar deudas, y no le alcanza. Ahora, totalDinero() a 0"{
+        self.gastar370MilYCobrar2Sueldos()
+        assert.equals(0, galvan.totalDinero())
+    }
+
+}
